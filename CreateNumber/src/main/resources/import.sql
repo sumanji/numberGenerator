@@ -1,0 +1,1 @@
+ insert into USER_INFO(email,password,password_creation_date,security_answer,user_name)  values('test@test.com','password',CURRENT_TIMESTAMP(),'security answer','test')
