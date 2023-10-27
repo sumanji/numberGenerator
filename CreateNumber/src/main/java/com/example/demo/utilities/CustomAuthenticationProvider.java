@@ -28,7 +28,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 
         Optional<UserInfo> authenticatedUser = user.getUser(name, password);
         
-        if(!authenticatedUser.isPresent() && false){
+        if(!authenticatedUser.isPresent()){
             throw new BadCredentialsException("Unauthorized Access");
         }
 
