@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
+import java.util.UUID;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -48,7 +49,8 @@ public class CreateNumberController {
 		Cookie cookie = new Cookie("access_token", token);
 		cookie.setSecure(true);
 		cookie.setHttpOnly(true);
-		String sessionDeatils = new Random().nextInt() + "" + System.currentTimeMillis();
+		UUID uuid = UUID.randomUUID();
+		String sessionDeatils = uuid.toString();
 		sessionDetailsStorage.add(sessionDeatils);
 		// add cookie to response
 		response.addCookie(cookie);
