@@ -17,7 +17,6 @@ public class UserServiceInfo implements IUser {
     private String userName;
 	
 	@Override
-	@Cacheable
 	public Optional<UserInfo> getUser(String userName, String password) {
 		// TODO Auto-generated method stub
 		Optional<UserInfo> result = Optional.ofNullable(userDao.findUserByuserNameandPassword(userName, password));
