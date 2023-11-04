@@ -1,5 +1,6 @@
 package com.example.demo.business;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -27,11 +28,19 @@ public class BusinessHelperClass implements IBusinessHelper {
 	        SimpleDateFormat ft
 	            = new SimpleDateFormat("dd-MM-yyyy");
 	 
-	        String currentDate = ft.format(new Date());
-			RandomNumberDetail  numberEntity = new RandomNumberDetail();
-			numberEntity.setNumberInsertionDate(new Date());
-			numberEntity.setRandomNumber(number);  
-			response = numberService.createNumber(numberEntity);
+	        try {
+	        	Date currentDate = new Date(System.currentTimeMillis());
+	        
+				//Date currentDate = ft.parse(new Date().toString());
+				RandomNumberDetail  numberEntity = new RandomNumberDetail();
+				numberEntity.setNumberInsertionDate(currentDate);
+				numberEntity.setRandomNumber(number);  
+				response = numberService.createNumber(numberEntity);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
 		}
 		return response != null;
 	}
