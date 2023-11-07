@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -30,8 +31,8 @@ public class GetNumberController {
 
 	}
 
-	@GetMapping("/number")
-	public RandomNumberDetail getNumber(@RequestBody String date) {
+	@GetMapping("/number/{date}")
+	public RandomNumberDetail getNumber(@PathVariable("date") String date) {
 
 		RandomNumberDetail res = null;
 		try {
