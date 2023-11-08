@@ -1,7 +1,5 @@
 package com.example.demo.service;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,17 +18,6 @@ public class RandomNumberService implements IRandomNumber {
 		return numberDao.save(numberDetail);
 	}
 
-	@Override
-	public List<RandomNumberDetail> getAllNumberDetails() {
-		// TODO Auto-generated method stub
-		return numberDao.findAll();
-	}
-
-	@Override
-	public RandomNumberDetail getNumberDetails(Integer id) {
-		// TODO Auto-generated method stub
-		return numberDao.findById(id).get();
-	}
 	
 	
 

@@ -13,7 +13,7 @@ import com.example.demo.business.IBusinessHelper;
 import com.example.demo.entity.RandomNumberDetail;
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/reader")
 public class GetNumberController {
 
 	@Autowired
