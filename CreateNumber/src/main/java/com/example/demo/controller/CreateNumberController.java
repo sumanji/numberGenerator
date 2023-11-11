@@ -11,6 +11,8 @@ import javax.ws.rs.core.Response.Status;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -40,6 +42,12 @@ public class CreateNumberController {
 	@PostMapping("/login")
 	public ResponseBean authenticateUser(HttpServletRequest request, HttpServletResponse response) {
 		// create a cookie
+		String authorization = request.getHeader("Authorization");
+		ResponseBean res = new ResponseBean();
+		res.setResponseStatus(Status.OK);
+		if(StringUtils.isEmpty(authorization)||!authorization.startsWith("Basic")) {
+			 throw new BadCredentialsException("Unauthorized Access");
+		}
 		String token = jwtservice.generateToken();
 		Cookie cookie = new Cookie("access_token", token);
 		cookie.setSecure(true);
@@ -49,29 +57,47 @@ public class CreateNumberController {
 		sessionDetailsStorage.add(sessionDeatils);
 		// add cookie to response
 		response.addCookie(cookie);
-		ResponseBean res = new ResponseBean();
-		res.setResponseStatus(Status.OK);
+		
 		res.setUniqueIdentifier(sessionDeatils);
 		res.setSystemInfo(HelperClass.getClientIpAddr(request));
 		return res;
+	}
+	
+	
+	@GetMapping("/logout")
+	public void logOut(HttpServletRequest request,HttpServletResponse response) {
+		
+		Cookie cookie = new Cookie("access_token", null);
+		cookie.setHttpOnly(true);
+		cookie.setSecure(false);
+		cookie.setMaxAge(0);
+		response.addCookie(cookie);
 	}
 
 	@PostMapping("/{identifierId}/create")
 	public ResponseBean createNumber(@RequestBody Integer number, @PathVariable("identifierId") String identifierId,
 			HttpServletRequest request) throws Exception {
 		String token = "";
-		Cookie[] cookies = request.getCookies();
-
-		if (cookies != null) {
-			for (Cookie cookie : cookies) {
-				if (cookie.getName().equals("access_token")) {
-					// do something
-					token = cookie.getValue();
-				}
-			}
-		}
 		ResponseBean res = new ResponseBean();
 		res.setResponseStatus(Status.OK);
+		Cookie[] cookies = request.getCookies();
+
+		if (cookies != null && cookies.length>0) {
+			boolean cookieAccessTokenEmpty = true;
+			for (Cookie cookie : cookies) {
+				if (cookie.getName().equals("access_token")) {
+					token = cookie.getValue();
+					cookieAccessTokenEmpty = token == null;
+				}
+			}
+			if(cookieAccessTokenEmpty){
+				res.setResponseStatus(Status.UNAUTHORIZED);
+				res.setError("Unauthorized Access");
+				return res;
+			}
+		}
+		
+		
 		if (jwtservice.isTokenExpired(token)) {
 			res.setResponseStatus(Status.NOT_ACCEPTABLE);
 			res.setError("Token Expired");
