@@ -54,7 +54,7 @@ public class CreateNumberController {
 		cookie.setHttpOnly(true);
 		UUID uuid = UUID.randomUUID();
 		String sessionDeatils = uuid.toString();
-		sessionDetailsStorage.add(sessionDeatils);
+		businessHelper.createSession(request.getRemoteUser(), token, sessionDeatils);
 		// add cookie to response
 		response.addCookie(cookie);
 		
@@ -66,7 +66,7 @@ public class CreateNumberController {
 	
 	@GetMapping("/logout")
 	public void logOut(HttpServletRequest request,HttpServletResponse response) {
-		
+		String loggedInuser = request.getRemoteUser();
 		Cookie cookie = new Cookie("access_token", null);
 		cookie.setHttpOnly(true);
 		cookie.setSecure(false);
@@ -97,13 +97,15 @@ public class CreateNumberController {
 			}
 		}
 		
-		
-		if (jwtservice.isTokenExpired(token)) {
+		if(!businessHelper.isSessionActive(identifierId)) {
+			res.setResponseStatus(Status.NOT_ACCEPTABLE);
+			res.setError("Session Inactive");
+		}
+		else if (jwtservice.isTokenExpired(token)) {
 			res.setResponseStatus(Status.NOT_ACCEPTABLE);
 			res.setError("Token Expired");
 
-		} else if (StringUtils.isEmpty(token) || !jwtservice.validateToken(token)
-				|| !sessionDetailsStorage.contains(identifierId)) {
+		} else if (StringUtils.isEmpty(token) || !jwtservice.validateToken(token)) {
 			res.setResponseStatus(Status.UNAUTHORIZED);
 			res.setError("Unauthorized Access");
 		} else {
