@@ -45,8 +45,8 @@ public class CreateNumberController {
 		String authorization = request.getHeader("Authorization");
 		ResponseBean res = new ResponseBean();
 		res.setResponseStatus(Status.OK);
-		if(StringUtils.isEmpty(authorization)||!authorization.startsWith("Basic")) {
-			 throw new BadCredentialsException("Unauthorized Access");
+		if (StringUtils.isEmpty(authorization) || !authorization.startsWith("Basic")) {
+			throw new BadCredentialsException("Unauthorized Access");
 		}
 		String token = jwtservice.generateToken();
 		Cookie cookie = new Cookie("access_token", token);
@@ -57,15 +57,14 @@ public class CreateNumberController {
 		businessHelper.createSession(request.getRemoteUser(), token, sessionDeatils);
 		// add cookie to response
 		response.addCookie(cookie);
-		
+
 		res.setUniqueIdentifier(sessionDeatils);
 		res.setSystemInfo(HelperClass.getClientIpAddr(request));
 		return res;
 	}
-	
-	
+
 	@GetMapping("/logout")
-	public void logOut(HttpServletRequest request,HttpServletResponse response) {
+	public void logOut(HttpServletRequest request, HttpServletResponse response) {
 		String loggedInuser = request.getRemoteUser();
 		Cookie cookie = new Cookie("access_token", null);
 		cookie.setHttpOnly(true);
@@ -82,7 +81,7 @@ public class CreateNumberController {
 		res.setResponseStatus(Status.OK);
 		Cookie[] cookies = request.getCookies();
 
-		if (cookies != null && cookies.length>0) {
+		if (cookies != null && cookies.length > 0) {
 			boolean cookieAccessTokenEmpty = true;
 			for (Cookie cookie : cookies) {
 				if (cookie.getName().equals("access_token")) {
@@ -90,24 +89,16 @@ public class CreateNumberController {
 					cookieAccessTokenEmpty = token == null;
 				}
 			}
-			if(cookieAccessTokenEmpty){
+			if (cookieAccessTokenEmpty) {
 				res.setResponseStatus(Status.UNAUTHORIZED);
 				res.setError("Unauthorized Access");
 				return res;
 			}
 		}
-		
-		if(!businessHelper.isSessionActive(identifierId)) {
-			res.setResponseStatus(Status.NOT_ACCEPTABLE);
-			res.setError("Session Inactive");
-		}
-		else if (jwtservice.isTokenExpired(token)) {
-			res.setResponseStatus(Status.NOT_ACCEPTABLE);
-			res.setError("Token Expired");
 
-		} else if (StringUtils.isEmpty(token) || !jwtservice.validateToken(token)) {
-			res.setResponseStatus(Status.UNAUTHORIZED);
-			res.setError("Unauthorized Access");
+		if (StringUtils.isEmpty(token) || !jwtservice.validateToken(token) || jwtservice.isTokenExpired(token)
+				|| !businessHelper.isSessionActive(identifierId)) {
+			throw new BadCredentialsException("Unauthorized Access");
 		} else {
 			try {
 				businessHelper.createNumber(number);
