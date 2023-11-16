@@ -9,5 +9,7 @@ public interface IUser {
 	Optional<UserInfo> getUser(String userId,String password);
 
 	String getUserName();
+	
+	void saveUser();
 
 }

@@ -26,7 +26,7 @@ public class JwtService {
 	private IUser user;
 	 
 
-    public static final String SECRET = "5367566B59703373367639792F423F4528482B4D6251655468576D5A71347437"; 
+    
     public String generateToken() { 
     	String userName = user.getUserName();
     	if(StringUtils.isEmpty(userName)) {
@@ -48,7 +48,7 @@ public class JwtService {
     } 
   
     private Key getSignKey() { 
-        byte[] keyBytes= Decoders.BASE64.decode(SECRET); 
+        byte[] keyBytes= Decoders.BASE64.decode(HelperConstants.SECRET); 
         return Keys.hmacShaKeyFor(keyBytes); 
     } 
   
