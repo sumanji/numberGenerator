@@ -7,5 +7,7 @@ public interface ISessionManager {
 	boolean isSessionActive(String uuid);
 	
 	void createSession(SessionManagement session);
+	
+	void deleteSession(String userName);
 
 }

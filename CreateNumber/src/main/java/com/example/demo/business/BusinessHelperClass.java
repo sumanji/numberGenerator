@@ -69,4 +69,10 @@ public class BusinessHelperClass implements IBusinessHelper {
 		
 	}
 
+	@Override
+	public void deleteSession(String userName) {
+		sessionService.deleteSession(userName);
+		
+	}
+
 }

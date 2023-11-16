@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.business.IBusinessHelper;
@@ -22,10 +23,10 @@ public class GetNumberController {
 	private IBusinessHelper businessHelper;
 
 	@GetMapping("/allNumbers")
-	public List<RandomNumberDetail> getAllNumbers() {
+	public List<RandomNumberDetail> getAllNumbers(@RequestParam("pageNum")Integer pageNum,@RequestParam("pageSize")Integer pageSize) {
 		List<RandomNumberDetail> response = null;
 		try {
-			response = businessHelper.findAllNumber();
+			response = businessHelper.findAllNumber(pageNum, pageSize);
 		} catch (Exception e) {
 
 		}

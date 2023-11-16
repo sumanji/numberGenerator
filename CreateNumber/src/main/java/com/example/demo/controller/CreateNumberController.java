@@ -24,6 +24,8 @@ import com.example.demo.business.IBusinessHelper;
 import com.example.demo.utilities.HelperClass;
 import com.example.demo.utilities.JwtService;
 
+import io.jsonwebtoken.ExpiredJwtException;
+
 @RestController
 @RequestMapping("/api/v1/generator")
 public class CreateNumberController {
@@ -65,12 +67,17 @@ public class CreateNumberController {
 
 	@GetMapping("/logout")
 	public void logOut(HttpServletRequest request, HttpServletResponse response) {
-		String loggedInuser = request.getRemoteUser();
-		Cookie cookie = new Cookie("access_token", null);
-		cookie.setHttpOnly(true);
-		cookie.setSecure(false);
-		cookie.setMaxAge(0);
-		response.addCookie(cookie);
+		try {
+			String loggedInuser = request.getRemoteUser();
+			businessHelper.deleteSession(loggedInuser);
+			Cookie cookie = new Cookie("access_token", null);
+			cookie.setHttpOnly(true);
+			cookie.setSecure(false);
+			cookie.setMaxAge(0);
+			response.addCookie(cookie);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	@PostMapping("/{identifierId}/create")
@@ -96,16 +103,21 @@ public class CreateNumberController {
 			}
 		}
 
-		if (StringUtils.isEmpty(token) || !jwtservice.validateToken(token) || jwtservice.isTokenExpired(token)
-				|| !businessHelper.isSessionActive(identifierId)) {
-			throw new BadCredentialsException("Unauthorized Access");
-		} else {
-			try {
+		try {
+
+			if (StringUtils.isEmpty(token) || !businessHelper.isSessionActive(identifierId)
+					|| !jwtservice.isTokenExpired(token) || !jwtservice.validateToken(token)) {
+				throw new BadCredentialsException("Unauthorized Access");
+			} else {
 				businessHelper.createNumber(number);
-			} catch (Exception e) {
-				res.setResponseStatus(Status.INTERNAL_SERVER_ERROR);
-				res.setError("Error While creating number");
 			}
+		} catch (ExpiredJwtException | BadCredentialsException e) {
+			String loggedInuser = request.getRemoteUser();
+			businessHelper.deleteSession(loggedInuser);
+			throw new BadCredentialsException("Unauthorized Access");
+		} catch (Exception e) {
+			res.setResponseStatus(Status.INTERNAL_SERVER_ERROR);
+			res.setError("Error While creating number");
 		}
 		return res;
 

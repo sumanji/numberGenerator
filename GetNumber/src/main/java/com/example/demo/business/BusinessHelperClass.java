@@ -17,9 +17,9 @@ public class BusinessHelperClass implements IBusinessHelper {
 
 
 	@Override
-	public List<RandomNumberDetail> findAllNumber() {
+	public List<RandomNumberDetail> findAllNumber(Integer pageNumber,Integer pageSize) {
 		// TODO Auto-generated method stub
-		return numberService.getAllNumberDetails();
+		return numberService.getAllNumberDetails(pageNumber, pageSize);
 	}
 
 	@Override

@@ -27,5 +27,12 @@ public class SessionManager implements ISessionManager {
 		sessionStorage.save(session);
 		
 	}
+	
+	
+	@Override
+	public void deleteSession(String userName) {
+		// TODO Auto-generated method stub
+		sessionStorage.deleteSession(userName);
+	}
 
 }

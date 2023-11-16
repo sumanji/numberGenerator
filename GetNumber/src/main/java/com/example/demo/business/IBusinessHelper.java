@@ -7,7 +7,8 @@ import com.example.demo.entity.RandomNumberDetail;
 
 public interface IBusinessHelper {
 	
-    List<RandomNumberDetail> findAllNumber();
+  
     RandomNumberDetail findNumber(String date);
+	List<RandomNumberDetail> findAllNumber(Integer pageNumber, Integer pageSize);
     
 }

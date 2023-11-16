@@ -7,7 +7,8 @@ import com.example.demo.entity.RandomNumberDetail;
 
 public interface IRandomNumber {
 	
-	public List<RandomNumberDetail> getAllNumberDetails();
-	
+
 	public RandomNumberDetail getNumberDetails(String date);
+
+	List<RandomNumberDetail> getAllNumberDetails(Integer pageNumber, Integer PageSize);
 }
