@@ -25,7 +25,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String name = authentication.getName();
-        String password = HelperClass.encrypt(authentication.getCredentials().toString());
+        String password = authentication.getCredentials().toString();
         
         if(StringUtils.isEmpty(name) || StringUtils.isEmpty(password)) {
         	 throw new BadCredentialsException("Unauthorized Access");

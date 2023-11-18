@@ -106,7 +106,7 @@ public class CreateNumberController {
 		try {
 
 			if (StringUtils.isEmpty(token) || !businessHelper.isSessionActive(identifierId)
-					|| !jwtservice.isTokenExpired(token) || !jwtservice.validateToken(token)) {
+					|| jwtservice.isTokenExpired(token) || !jwtservice.validateToken(token)) {
 				throw new BadCredentialsException("Unauthorized Access");
 			} else {
 				businessHelper.createNumber(number);
