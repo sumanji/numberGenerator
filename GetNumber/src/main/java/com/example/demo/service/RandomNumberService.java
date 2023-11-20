@@ -7,6 +7,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.ResponseEntity.ResponseBean;
 import com.example.demo.dao.INumberDao;
 import com.example.demo.entity.RandomNumberDetail;
 
@@ -19,9 +20,10 @@ public class RandomNumberService implements IRandomNumber {
 
 
 	@Override
-	public List<RandomNumberDetail> getAllNumberDetails(Integer pageNumber,Integer pageSize) {
+	public ResponseBean getAllNumberDetails(Integer pageNumber,Integer pageSize) {
 		int countResult = (int)numberDao.count();
 		int totalRecordviewed =  (pageNumber * pageSize);
+		ResponseBean responseBean = new ResponseBean();
 		
 		Pageable firstPageWithTwoElements = null;
 		
@@ -32,8 +34,9 @@ public class RandomNumberService implements IRandomNumber {
 			firstPageWithTwoElements = PageRequest.of(pageNumber,remainingRecordSize);
 		}
 		 
-		
-		return numberDao.findAll(firstPageWithTwoElements).getContent();
+		responseBean.setTotalcount(countResult);
+		responseBean.setResults(numberDao.findAll(firstPageWithTwoElements).getContent());
+		return  responseBean;
 	}
 
 	@Override

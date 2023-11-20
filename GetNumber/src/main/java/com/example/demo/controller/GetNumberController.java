@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.ResponseEntity.ResponseBean;
 import com.example.demo.business.IBusinessHelper;
 import com.example.demo.entity.RandomNumberDetail;
 
@@ -23,12 +24,12 @@ public class GetNumberController {
 	private IBusinessHelper businessHelper;
 
 	@GetMapping("/allNumbers")
-	public List<RandomNumberDetail> getAllNumbers(@RequestParam("pageNum")Integer pageNum,@RequestParam("pageSize")Integer pageSize) {
-		List<RandomNumberDetail> response = null;
+	public ResponseBean getAllNumbers(@RequestParam("pageNum")Integer pageNum,@RequestParam("pageSize")Integer pageSize) {
+		ResponseBean response = null;
 		try {
 			response = businessHelper.findAllNumber(pageNum, pageSize);
 		} catch (Exception e) {
-
+			response = new ResponseBean();
 		}
 		return response;
 
@@ -42,6 +43,7 @@ public class GetNumberController {
 			res = businessHelper.findNumber(date);
 		} catch (Exception e) {
 			// TODO: handle exception
+			res = new RandomNumberDetail();
 		}
 		return res;
 

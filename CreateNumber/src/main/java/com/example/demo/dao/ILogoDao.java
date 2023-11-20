@@ -4,6 +4,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.example.demo.entity.LogoStorage;
 
-public interface ILogo extends JpaRepository<LogoStorage, Integer> {
+public interface ILogoDao extends JpaRepository<LogoStorage, Integer> {
 
 }

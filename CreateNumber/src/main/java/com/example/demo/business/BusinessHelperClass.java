@@ -1,12 +1,15 @@
 package com.example.demo.business;
 
 import java.util.Date;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.entity.LogoStorage;
 import com.example.demo.entity.RandomNumberDetail;
 import com.example.demo.entity.SessionManagement;
+import com.example.demo.service.ILogo;
 import com.example.demo.service.IRandomNumber;
 import com.example.demo.service.ISessionManager;
 
@@ -18,6 +21,9 @@ public class BusinessHelperClass implements IBusinessHelper {
 	
 	@Autowired
 	ISessionManager sessionService;
+	
+	@Autowired
+	ILogo  logoService;
 
 	@Override
 	public boolean createNumber(Integer number) {
@@ -72,6 +78,27 @@ public class BusinessHelperClass implements IBusinessHelper {
 	@Override
 	public void deleteSession(String userName) {
 		sessionService.deleteSession(userName);
+		
+	}
+
+	@Override
+	public LogoStorage getLogoDetails(Integer logoId) {
+		LogoStorage response = null;
+		Optional<LogoStorage> result =  logoService.getLogoInfo(logoId);
+		if(result.isPresent()) {
+			response = result.get();
+		}else {
+			response = new LogoStorage();
+		}
+		return response;
+	}
+
+	@Override
+	public void saveApplicationLogo(LogoStorage entity) {
+	    if(entity != null) {
+	    	logoService.saveLogoInfo(entity);
+	    }
+	    	
 		
 	}
 

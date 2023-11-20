@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.ResponseEntity.ResponseBean;
 import com.example.demo.entity.RandomNumberDetail;
 import com.example.demo.service.IRandomNumber;
 
@@ -17,7 +18,7 @@ public class BusinessHelperClass implements IBusinessHelper {
 
 
 	@Override
-	public List<RandomNumberDetail> findAllNumber(Integer pageNumber,Integer pageSize) {
+	public ResponseBean findAllNumber(Integer pageNumber,Integer pageSize) {
 		// TODO Auto-generated method stub
 		return numberService.getAllNumberDetails(pageNumber, pageSize);
 	}

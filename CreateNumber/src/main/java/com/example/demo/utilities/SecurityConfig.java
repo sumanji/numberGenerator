@@ -45,7 +45,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	*/
 	 @Override
 	    public void configure(WebSecurity web) {
-	        web.ignoring().antMatchers("/create");
+	        web.ignoring().antMatchers("/create","/logo/**");
 	    }
  
 	@Override

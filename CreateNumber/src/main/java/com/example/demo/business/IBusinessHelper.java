@@ -1,5 +1,7 @@
 package com.example.demo.business;
 
+import com.example.demo.entity.LogoStorage;
+
 public interface IBusinessHelper {
 	
     boolean createNumber(Integer number);
@@ -10,6 +12,11 @@ public interface IBusinessHelper {
 	
 	
 	void deleteSession(String userName);
+	
+	
+	LogoStorage getLogoDetails(Integer logoId);
+	
+	void saveApplicationLogo(LogoStorage entity);
 
     
 }
