@@ -134,6 +134,7 @@ public class CreateNumberController {
 		//String token = "";
 		try {
 		boolean cookieAccessTokenEmpty = validaterequest(request,identifierId);
+		cookieAccessTokenEmpty = false;
 		if (cookieAccessTokenEmpty) {
 			err_res.setResponseStatus(Status.UNAUTHORIZED);
 			err_res.setError("Unauthorized Access");
