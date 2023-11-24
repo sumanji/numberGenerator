@@ -1,21 +1,21 @@
 package com.example.demo.utilities;
 
-import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.*;
-import org.springframework.security.core.*;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.stereotype.Component;
-
-import com.example.demo.entity.UserInfo;
-import com.example.demo.service.IUser;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import javax.servlet.http.HttpSession;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.stereotype.Component;
+
+import com.example.demo.entity.UserInfo;
+import com.example.demo.service.IUser;
 @Component
 public class CustomAuthenticationProvider implements AuthenticationProvider {
 	
@@ -34,12 +34,12 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         Optional<UserInfo> authenticatedUser = user.getUser(name, password);
         
         if(!authenticatedUser.isPresent()){
-            throw new BadCredentialsException("Unauthorized Access");
+          throw new BadCredentialsException("Unauthorized Access");
         }
 
         List<GrantedAuthority> authorities = new ArrayList<>();
         Authentication auth = new UsernamePasswordAuthenticationToken(name, password, authorities);
-       // auth.setAuthenticated(false);
+        //auth.setAuthenticated(false);
         return auth;
     }
 

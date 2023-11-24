@@ -18,7 +18,7 @@ public class SessionManager implements ISessionManager {
 	@Override
 	public boolean isSessionActive(String uuid) {
 	   LocalDateTime  endTime=  sessionStorage.getSessionEndTime(uuid);
-	   LocalDateTime  currentTime = LocalDateTime.now().minusMinutes(HelperConstants.sessionElapseTime);
+	   LocalDateTime  currentTime = LocalDateTime.now();//.minusMinutes(HelperConstants.sessionElapseTime);
 		return currentTime.isBefore(endTime);
 	}
 
