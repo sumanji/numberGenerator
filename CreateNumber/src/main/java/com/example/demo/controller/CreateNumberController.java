@@ -124,14 +124,13 @@ public class CreateNumberController {
 			}
 			
 		}
-		if (!businessHelper.isSessionActive(identifierId)) {
+		
+		
+		if (StringUtils.isEmpty(token) || !businessHelper.isSessionActive(identifierId)
+				|| jwtservice.isTokenExpired(token) || !jwtservice.validateToken(token)) {
 			cookieAccessTokenEmpty = true;
 		}
 		
-		/*if (StringUtils.isEmpty(token) || !businessHelper.isSessionActive(identifierId)
-				|| jwtservice.isTokenExpired(token) || !jwtservice.validateToken(token)) {
-			cookieAccessTokenEmpty = true;
-		}*/
 		return cookieAccessTokenEmpty;
     }
 }
