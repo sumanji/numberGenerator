@@ -1,27 +1,18 @@
 package com.generator.pojo;
 
-import javax.ws.rs.core.Response.Status;
-
 import org.springframework.http.HttpStatus;
 
 public class ResponseBean {
 	
-	Status responseStatus;
-	String systemInfo;
+	HttpStatus responseStatus;
 	String message;
 	
 	String uniqueIdentifier;
-	public Status getResponseStatus() {
+	public HttpStatus getResponseStatus() {
 		return responseStatus;
 	}
-	public void setResponseStatus(Status ok) {
+	public void setResponseStatus(HttpStatus ok) {
 		this.responseStatus = ok;
-	}
-	public String getSystemInfo() {
-		return systemInfo;
-	}
-	public void setSystemInfo(String systemInfo) {
-		this.systemInfo = systemInfo;
 	}
 	
 	public String getUniqueIdentifier() {

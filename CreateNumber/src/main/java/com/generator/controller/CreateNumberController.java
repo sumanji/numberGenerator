@@ -5,10 +5,10 @@ import java.util.Set;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.core.Response.Status;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.generator.business.IBusinessHelper;
-import com.generator.exception.CreateNumberException;
+import com.generator.exception.ApplicationException;
 import com.generator.pojo.ResponseBean;
 import com.generator.utilities.JwtService;
 
@@ -40,26 +40,26 @@ public class CreateNumberController {
 			HttpServletRequest request) throws Exception {
 		// String token = "";
 		ResponseBean res = new ResponseBean();
-		res.setResponseStatus(Status.OK);
+		res.setResponseStatus(HttpStatus.OK);
 	
 		try {
 			boolean cookieAccessTokenEmpty = validaterequest(request, identifierId);
 			if (cookieAccessTokenEmpty) {
 				//res.setResponseStatus(Status.UNAUTHORIZED);
 				//res.setError("Unauthorized Access");
-				throw new CreateNumberException("Unauthorized Access");
+				throw new ApplicationException("Unauthorized Access",HttpStatus.UNAUTHORIZED);
 				//return res;
 			}
 			businessHelper.createNumber(number);
 
-		} catch (ExpiredJwtException | BadCredentialsException | CreateNumberException e) {
+		} catch (ExpiredJwtException | BadCredentialsException | ApplicationException e) {
 			String loggedInuser = request.getRemoteUser();
 			businessHelper.deleteSession(loggedInuser);
-			throw new CreateNumberException("Unauthorized Access");
+			throw new ApplicationException("Unauthorized Access",HttpStatus.UNAUTHORIZED);
 		} catch (Exception e) {
 			//res.setResponseStatus(Status.INTERNAL_SERVER_ERROR);
 			//res.setError("Error While creating number");
-			throw new CreateNumberException("Error While creating number");
+			throw new ApplicationException("Error While creating number",HttpStatus.METHOD_FAILURE);
 		}
 		return res;
 

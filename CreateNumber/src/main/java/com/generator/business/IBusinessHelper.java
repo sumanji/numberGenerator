@@ -4,32 +4,29 @@ import java.util.List;
 
 import com.generator.entity.LogoStorage;
 import com.generator.entity.UserInfo;
-import com.generator.exception.CreateNumberException;
-import com.generator.exception.LoginException;
-import com.generator.exception.LogoException;
-import com.generator.exception.UserException;
+import com.generator.exception.ApplicationException;
 
 public interface IBusinessHelper {
 	
-    boolean createNumber(Integer number) throws CreateNumberException;
+    boolean createNumber(Integer number) throws ApplicationException;
     
-    boolean isSessionActive(String uuid) throws LoginException;
+    boolean isSessionActive(String uuid) throws ApplicationException;
 
-	void createSession(String userName, String cookie, String uuid) throws LoginException;
+	void createSession(String userName, String cookie, String uuid) throws ApplicationException;
 	
 	
-	void deleteSession(String userName) throws LoginException;
+	void deleteSession(String userName) throws ApplicationException;
 	
 	
-	LogoStorage getLogoDetails(Integer logoId) throws LogoException;
+	LogoStorage getLogoDetails(Integer logoId) throws ApplicationException;
 	
-	void saveApplicationLogo(LogoStorage entity) throws LogoException;
+	void saveApplicationLogo(LogoStorage entity) throws ApplicationException;
 	
-	List<UserInfo> getAllUser() throws UserException;
+	List<UserInfo> getAllUser() throws ApplicationException;
 	
-	UserInfo getUserById(Integer userId) throws UserException;
+	UserInfo getUserById(Integer userId) throws ApplicationException;
 
-	void createuser(UserInfo user) throws UserException;
+	void createuser(UserInfo user) throws ApplicationException;
 
     
 }

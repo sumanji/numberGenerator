@@ -4,9 +4,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.ws.rs.core.Response.Status;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,7 +29,7 @@ public class UserController {
 	@PostMapping("/user")
 	public ResponseBean createUser(@RequestBody UserInfo user) throws Exception {
 		ResponseBean res = new ResponseBean();
-		res.setResponseStatus(Status.OK);
+		res.setResponseStatus(HttpStatus.OK);
 		
 		businessHelper.createuser(user);
 		res.setMessage("User Created SuccessFully");

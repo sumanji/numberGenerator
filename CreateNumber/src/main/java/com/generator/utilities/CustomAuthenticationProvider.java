@@ -6,16 +6,16 @@ import java.util.Optional;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 
 import com.generator.entity.UserInfo;
-import com.generator.exception.LoginException;
+import com.generator.exception.ApplicationException;
 import com.generator.service.IUser;
 
 @Component
@@ -36,7 +36,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 		try {
 			authenticatedUser = user.getUser(name, password);
 		} catch (Exception e) {
-			throw new LoginException(e.getMessage());
+			throw new ApplicationException(e.getMessage(),HttpStatus.UNAUTHORIZED);
 		}
 
 		if (!authenticatedUser.isPresent()) {

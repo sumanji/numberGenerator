@@ -7,20 +7,19 @@ import java.util.UUID;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.core.Response.Status;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.generator.pojo.ResponseBean;
 import com.generator.business.IBusinessHelper;
-import com.generator.exception.LoginException;
-import com.generator.utilities.HelperClass;
+import com.generator.exception.ApplicationException;
+import com.generator.pojo.ResponseBean;
 import com.generator.utilities.JwtService;
 
 @RestController
@@ -43,23 +42,26 @@ public class LogInController {
 		// create a cookie
 		String authorization = request.getHeader("Authorization");
 		ResponseBean res = new ResponseBean();
-		res.setResponseStatus(Status.OK);
-		if (StringUtils.isEmpty(authorization) || !authorization.startsWith("Basic")) {
-			throw new BadCredentialsException("Unauthorized Access");
+		res.setResponseStatus(HttpStatus.OK);
+		try {
+			if (StringUtils.isEmpty(authorization) || !authorization.startsWith("Basic")) {
+				throw new ApplicationException("Unauthorized Access", HttpStatus.UNAUTHORIZED);
+			}
+			String token = jwtservice.generateToken();
+			Cookie cookie = new Cookie("access_token", token);
+			cookie.setSecure(true);
+			cookie.setHttpOnly(true);
+			UUID uuid = UUID.randomUUID();
+			String sessionDeatils = uuid.toString();
+			businessHelper.createSession(request.getRemoteUser(), token, sessionDeatils);
+			// add cookie to response
+			response.addCookie(cookie);
+			res.setUniqueIdentifier(sessionDeatils);
+			return res;
+		} catch (Exception e) {
+			throw new ApplicationException(e.getMessage(), HttpStatus.UNAUTHORIZED);
 		}
-		String token = jwtservice.generateToken();
-		Cookie cookie = new Cookie("access_token", token);
-		cookie.setSecure(true);
-		cookie.setHttpOnly(true);
-		UUID uuid = UUID.randomUUID();
-		String sessionDeatils = uuid.toString();
-		businessHelper.createSession(request.getRemoteUser(), token, sessionDeatils);
-		// add cookie to response
-		response.addCookie(cookie);
 
-		res.setUniqueIdentifier(sessionDeatils);
-		res.setSystemInfo(HelperClass.getClientIpAddr(request));
-		return res;
 	}
 
 	@GetMapping("/logout")
@@ -73,7 +75,7 @@ public class LogInController {
 			cookie.setMaxAge(0);
 			response.addCookie(cookie);
 		} catch (Exception e) {
-			throw new LoginException(e.getMessage());
+			throw new ApplicationException(e.getMessage(), HttpStatus.METHOD_FAILURE);
 		}
 	}
 
