@@ -42,7 +42,6 @@ public class LogoControllers {
 			HttpServletRequest request) throws Exception {
 		try {
 			boolean cookieAccessTokenEmpty = validaterequest(request, identifierId);
-			cookieAccessTokenEmpty = false;
 			if (cookieAccessTokenEmpty) {
 				throw new ApplicationException("Unauthorized Access", HttpStatus.UNAUTHORIZED);
 			}
