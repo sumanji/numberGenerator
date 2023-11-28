@@ -60,6 +60,12 @@ public class UserServiceInfo implements IUser {
 		return userDao.findById(userId).get();
 		
 	}
+
+	@Override
+	public UserInfo getUserByUserName(String userName) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 	
 	

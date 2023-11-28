@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,10 +19,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.generator.business.IBusinessHelper;
 import com.generator.exception.ApplicationException;
+import com.generator.pojo.BaseBean;
 import com.generator.pojo.ResponseBean;
 import com.generator.utilities.JwtService;
 
 import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.security.SignatureException;
 
 @RestController
 @RequestMapping("/api/v1/generator")
@@ -36,30 +39,27 @@ public class CreateNumberController {
 	Set<String> sessionDetailsStorage = new HashSet<String>();
 
 	@PostMapping("/{identifierId}/create")
-	public ResponseBean createNumber(@RequestBody Integer number, @PathVariable("identifierId") String identifierId,
+	public BaseBean createNumber(@RequestBody Integer number, @PathVariable("identifierId") String identifierId,
 			HttpServletRequest request) throws Exception {
 		// String token = "";
-		ResponseBean res = new ResponseBean();
+		BaseBean res = new BaseBean();
 		res.setResponseStatus(HttpStatus.OK);
-	
+
 		try {
 			boolean cookieAccessTokenEmpty = validaterequest(request, identifierId);
 			if (cookieAccessTokenEmpty) {
-				//res.setResponseStatus(Status.UNAUTHORIZED);
-				//res.setError("Unauthorized Access");
-				throw new ApplicationException("Unauthorized Access",HttpStatus.UNAUTHORIZED);
-				//return res;
+				throw new ApplicationException("Unauthorized Access", HttpStatus.UNAUTHORIZED.value());
 			}
 			businessHelper.createNumber(number);
 
-		} catch (ExpiredJwtException | BadCredentialsException | ApplicationException e) {
+		} catch (SignatureException | ExpiredJwtException | BadCredentialsException | ApplicationException e) {
 			String loggedInuser = request.getRemoteUser();
 			businessHelper.deleteSession(loggedInuser);
-			throw new ApplicationException("Unauthorized Access",HttpStatus.UNAUTHORIZED);
+			throw new ApplicationException(e.getMessage(),
+					e instanceof ApplicationException ? ((ApplicationException) e).getStatusCode()
+							: HttpStatus.UNAUTHORIZED.value());
 		} catch (Exception e) {
-			//res.setResponseStatus(Status.INTERNAL_SERVER_ERROR);
-			//res.setError("Error While creating number");
-			throw new ApplicationException("Error While creating number",HttpStatus.METHOD_FAILURE);
+			throw new ApplicationException("Error While creating number", HttpStatus.METHOD_FAILURE.value());
 		}
 		return res;
 

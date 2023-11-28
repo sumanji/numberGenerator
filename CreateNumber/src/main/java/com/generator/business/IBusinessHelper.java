@@ -27,6 +27,8 @@ public interface IBusinessHelper {
 	UserInfo getUserById(Integer userId) throws ApplicationException;
 
 	void createuser(UserInfo user) throws ApplicationException;
+	
+	UserInfo getUser(String userName,String password) throws ApplicationException;
 
     
 }

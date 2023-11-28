@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.generator.business.IBusinessHelper;
 import com.generator.entity.UserInfo;
+import com.generator.pojo.BaseBean;
 import com.generator.pojo.ResponseBean;
 
 @RestController
@@ -27,10 +28,9 @@ public class UserController {
 	Set<String> sessionDetailsStorage = new HashSet<String>();
 
 	@PostMapping("/user")
-	public ResponseBean createUser(@RequestBody UserInfo user) throws Exception {
-		ResponseBean res = new ResponseBean();
+	public BaseBean createUser(@RequestBody UserInfo user) throws Exception {
+		BaseBean res = new BaseBean();
 		res.setResponseStatus(HttpStatus.OK);
-		
 		businessHelper.createuser(user);
 		res.setMessage("User Created SuccessFully");
         return res;

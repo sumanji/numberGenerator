@@ -16,5 +16,7 @@ public interface IUser {
 	List<UserInfo> getAllUser();
 	
 	UserInfo getUserById(Integer userId);
+	
+	UserInfo getUserByUserName(String userName);
 
 }

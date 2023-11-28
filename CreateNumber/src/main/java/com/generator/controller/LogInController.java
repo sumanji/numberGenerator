@@ -1,5 +1,7 @@
 package com.generator.controller;
 
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.generator.business.IBusinessHelper;
+import com.generator.entity.UserInfo;
 import com.generator.exception.ApplicationException;
 import com.generator.pojo.ResponseBean;
 import com.generator.utilities.JwtService;
@@ -45,7 +48,7 @@ public class LogInController {
 		res.setResponseStatus(HttpStatus.OK);
 		try {
 			if (StringUtils.isEmpty(authorization) || !authorization.startsWith("Basic")) {
-				throw new ApplicationException("Unauthorized Access", HttpStatus.UNAUTHORIZED);
+				throw new ApplicationException("Unauthorized Access", HttpStatus.UNAUTHORIZED.value());
 			}
 			String token = jwtservice.generateToken();
 			Cookie cookie = new Cookie("access_token", token);
@@ -54,12 +57,23 @@ public class LogInController {
 			UUID uuid = UUID.randomUUID();
 			String sessionDeatils = uuid.toString();
 			businessHelper.createSession(request.getRemoteUser(), token, sessionDeatils);
-			// add cookie to response
+			if (authorization != null && authorization.toLowerCase().startsWith("basic")) {
+				// Authorization: Basic base64credentials
+				String base64Credentials = authorization.substring("Basic".length()).trim();
+				byte[] credDecoded = Base64.getDecoder().decode(base64Credentials);
+				String credentials = new String(credDecoded, StandardCharsets.UTF_8);
+				// credentials = username:password
+				final String[] values = credentials.split(":", 2);
+				UserInfo user = businessHelper.getUser(values[0], values[1]);
+				user.setPassword(null);
+				user.setSecurityAnswer(null);
+				res.setUserInfo(user);
+			}
 			response.addCookie(cookie);
 			res.setUniqueIdentifier(sessionDeatils);
 			return res;
 		} catch (Exception e) {
-			throw new ApplicationException(e.getMessage(), HttpStatus.UNAUTHORIZED);
+			throw new ApplicationException(e.getMessage(), HttpStatus.UNAUTHORIZED.value());
 		}
 
 	}
@@ -75,7 +89,7 @@ public class LogInController {
 			cookie.setMaxAge(0);
 			response.addCookie(cookie);
 		} catch (Exception e) {
-			throw new ApplicationException(e.getMessage(), HttpStatus.METHOD_FAILURE);
+			throw new ApplicationException(e.getMessage(), HttpStatus.METHOD_FAILURE.value());
 		}
 	}
 

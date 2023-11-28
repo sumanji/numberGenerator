@@ -45,7 +45,7 @@ public class BusinessHelperClass implements IBusinessHelper {
 				numberEntity.setRandomNumber(number);
 				response = numberService.createNumber(numberEntity);
 			} catch (Exception e) {
-				throw new ApplicationException("Error while saving  number.",HttpStatus.BAD_REQUEST);
+				throw new ApplicationException("Error while saving  number.", HttpStatus.BAD_REQUEST.value());
 			}
 
 		}
@@ -58,7 +58,7 @@ public class BusinessHelperClass implements IBusinessHelper {
 		try {
 			flag = sessionService.isSessionActive(uuid);
 		} catch (Exception e) {
-			throw new ApplicationException("Session Expired",HttpStatus.NETWORK_AUTHENTICATION_REQUIRED);
+			throw new ApplicationException("Session Expired", HttpStatus.NETWORK_AUTHENTICATION_REQUIRED.value());
 		}
 		return flag;
 	}
@@ -73,7 +73,7 @@ public class BusinessHelperClass implements IBusinessHelper {
 		try {
 			sessionService.createSession(session);
 		} catch (Exception e) {
-			throw new ApplicationException("Error while creating session",HttpStatus.BAD_REQUEST);
+			throw new ApplicationException("Error while creating session", HttpStatus.BAD_REQUEST.value());
 		}
 
 	}
@@ -82,9 +82,9 @@ public class BusinessHelperClass implements IBusinessHelper {
 	@Override
 	public void deleteSession(String userName) throws ApplicationException {
 		try {
-		sessionService.deleteSession(userName);
+			sessionService.deleteSession(userName);
 		} catch (Exception e) {
-			throw new ApplicationException("Error while deleting sdession.",HttpStatus.METHOD_FAILURE);
+			throw new ApplicationException("Error while deleting sdession.", HttpStatus.METHOD_FAILURE.value());
 		}
 	}
 
@@ -92,13 +92,13 @@ public class BusinessHelperClass implements IBusinessHelper {
 	public LogoStorage getLogoDetails(Integer logoId) throws ApplicationException {
 		LogoStorage response = null;
 		try {
-		Optional<LogoStorage> result = logoService.getLogoInfo(logoId);
-		if (result.isPresent()) {
-			response = result.get();
-		}
-		return response;
-		}catch (Exception e) {
-			throw new ApplicationException("Error while fetching logo details.",HttpStatus.METHOD_FAILURE);
+			Optional<LogoStorage> result = logoService.getLogoInfo(logoId);
+			if (result.isPresent()) {
+				response = result.get();
+			}
+			return response;
+		} catch (Exception e) {
+			throw new ApplicationException("Error while fetching logo details.", HttpStatus.METHOD_FAILURE.value());
 		}
 	}
 
@@ -106,49 +106,55 @@ public class BusinessHelperClass implements IBusinessHelper {
 	@Override
 	public void saveApplicationLogo(LogoStorage entity) throws ApplicationException {
 		try {
-		if (entity != null) {
-			logoService.saveLogoInfo(entity);
-		}}catch (Exception e) {
-			throw new ApplicationException("Eroor while saving logo.",HttpStatus.BAD_REQUEST);
+			if (entity != null) {
+				logoService.saveLogoInfo(entity);
+			}
+		} catch (Exception e) {
+			throw new ApplicationException("Eroor while saving logo.", HttpStatus.BAD_REQUEST.value());
 		}
-		
 
 	}
 
 	@Override
 	public void createuser(UserInfo user) throws ApplicationException {
 		try {
-		if(user	!= null && user.getPassword() != null) {
-			String password = user.getPassword();
-			Date currentDate = new Date(System.currentTimeMillis());
-			user.setPassword(HelperClass.encrypt(password));
-			user.setPasswordCreationDate(currentDate);
-			userService.saveUser(user);
-		}
-		}catch (Exception e) {
-			throw new ApplicationException("Error while creating user.",HttpStatus.BAD_REQUEST);
+			if (user != null && user.getPassword() != null) {
+				String password = user.getPassword();
+				Date currentDate = new Date(System.currentTimeMillis());
+				user.setPassword(HelperClass.encrypt(password));
+				user.setPasswordCreationDate(currentDate);
+				userService.saveUser(user);
+			}
+		} catch (Exception e) {
+			throw new ApplicationException("Error while creating user.", HttpStatus.BAD_REQUEST.value());
 		}
 	}
 
 	@Override
 	public List<UserInfo> getAllUser() throws ApplicationException {
 		try {
-		return userService.getAllUser();
-		}catch (Exception e) {
-			throw new ApplicationException("Error while fetching all users.",HttpStatus.METHOD_FAILURE);
+			return userService.getAllUser();
+		} catch (Exception e) {
+			throw new ApplicationException("Error while fetching all users.", HttpStatus.METHOD_FAILURE.value());
 		}
 	}
 
 	@Override
 	public UserInfo getUserById(Integer userId) throws ApplicationException {
 		try {
-		return userService.getUserById(userId);
-		}catch (Exception e) {
-			throw new ApplicationException("Error while fetching user.",HttpStatus.METHOD_FAILURE);
+			return userService.getUserById(userId);
+		} catch (Exception e) {
+			throw new ApplicationException("Error while fetching user.", HttpStatus.METHOD_FAILURE.value());
 		}
 	}
-	
-	
-	
+
+	@Override
+	public UserInfo getUser(String userName, String password) throws ApplicationException {
+		try {
+			return userService.getUser(userName, password).get();
+		} catch (Exception e) {
+			throw new ApplicationException("Error while fetching user.", HttpStatus.METHOD_FAILURE.value());
+		}
+	}
 
 }

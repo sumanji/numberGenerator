@@ -1,19 +1,11 @@
 package com.generator.pojo;
 
-import org.springframework.http.HttpStatus;
+import com.generator.entity.UserInfo;
 
-public class ResponseBean {
-	
-	HttpStatus responseStatus;
-	String message;
+public class ResponseBean extends BaseBean {
 	
 	String uniqueIdentifier;
-	public HttpStatus getResponseStatus() {
-		return responseStatus;
-	}
-	public void setResponseStatus(HttpStatus ok) {
-		this.responseStatus = ok;
-	}
+	UserInfo userInfo;
 	
 	public String getUniqueIdentifier() {
 		return uniqueIdentifier;
@@ -21,11 +13,11 @@ public class ResponseBean {
 	public void setUniqueIdentifier(String uniqueIdentifier) {
 		this.uniqueIdentifier = uniqueIdentifier;
 	}
-	public String getMessage() {
-		return message;
+	public UserInfo getUserInfo() {
+		return userInfo;
 	}
-	public void setMessage(String message) {
-		this.message = message;
+	public void setUserInfo(UserInfo userInfo) {
+		this.userInfo = userInfo;
 	}
 	
 	

@@ -2,6 +2,7 @@ package com.generator.entity;
 
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -19,6 +20,7 @@ public class RandomNumberDetail {
 	private int id;
 	private int randomNumber;
 	@Temporal(TemporalType.DATE)
+	@Column(unique = true)
 	private Date numberInsertionDate;
 	public int getId() {
 		return id;

@@ -20,10 +20,12 @@ import org.springframework.web.bind.annotation.RestController;
 import com.generator.business.IBusinessHelper;
 import com.generator.entity.LogoStorage;
 import com.generator.exception.ApplicationException;
+import com.generator.pojo.BaseBean;
 import com.generator.pojo.ResponseBean;
 import com.generator.utilities.JwtService;
 
 import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.security.SignatureException;
 
 @RestController
 @RequestMapping("/api/v1/generator")
@@ -43,38 +45,42 @@ public class LogoControllers {
 		try {
 			boolean cookieAccessTokenEmpty = validaterequest(request, identifierId);
 			if (cookieAccessTokenEmpty) {
-				throw new ApplicationException("Unauthorized Access", HttpStatus.UNAUTHORIZED);
+				throw new ApplicationException("Unauthorized Access", HttpStatus.UNAUTHORIZED.value());
 			}
 
-		} catch (ExpiredJwtException | BadCredentialsException | ApplicationException e) {
-			throw new ApplicationException("Unauthorized Access", HttpStatus.UNAUTHORIZED);
+		} catch (SignatureException | ExpiredJwtException | BadCredentialsException | ApplicationException e) {
+			throw new ApplicationException(e.getMessage(),
+					e instanceof ApplicationException ? ((ApplicationException) e).getStatusCode()
+							: HttpStatus.UNAUTHORIZED.value());
 		} catch (Exception e) {
-			throw new ApplicationException(e.getMessage(), HttpStatus.UNAUTHORIZED);
+			throw new ApplicationException(e.getMessage(), HttpStatus.UNAUTHORIZED.value());
 		}
 		return businessHelper.getLogoDetails(logoId);
 
 	}
 
 	@PostMapping("/logo/{identifierId}")
-	public Object logoDetails(HttpServletRequest request, @PathVariable("identifierId") String identifierId,
+	public BaseBean logoDetails(HttpServletRequest request, @PathVariable("identifierId") String identifierId,
 			@RequestBody LogoStorage logoDetails) throws Exception {
-		ResponseBean err_res = new ResponseBean();
+		BaseBean res = new BaseBean();
 		try {
 			boolean cookieAccessTokenEmpty = validaterequest(request, identifierId);
 			if (cookieAccessTokenEmpty) {
-				throw new ApplicationException("Unauthorized Access", HttpStatus.UNAUTHORIZED);
+				throw new ApplicationException("Unauthorized Access", HttpStatus.UNAUTHORIZED.value());
 			}
 
 			businessHelper.saveApplicationLogo(logoDetails);
 
-		} catch (ExpiredJwtException | BadCredentialsException | ApplicationException e) {
-			throw new ApplicationException("Unauthorized Access", HttpStatus.UNAUTHORIZED);
+		} catch (SignatureException | ExpiredJwtException | BadCredentialsException | ApplicationException e) {
+			throw new ApplicationException(e.getMessage(),
+					e instanceof ApplicationException ? ((ApplicationException) e).getStatusCode()
+							: HttpStatus.UNAUTHORIZED.value());
 		} catch (Exception e) {
-			throw new ApplicationException(e.getMessage(), HttpStatus.UNAUTHORIZED);
+			throw new ApplicationException(e.getMessage(), HttpStatus.UNAUTHORIZED.value());
 		}
-		err_res.setResponseStatus(HttpStatus.ACCEPTED);
-		err_res.setMessage("Successfully saved details");
-		return err_res;
+		res.setResponseStatus(HttpStatus.ACCEPTED);
+		res.setMessage("Successfully saved details");
+		return res;
 	}
 
 	private boolean validaterequest(HttpServletRequest request, String identifierId) throws Exception {
