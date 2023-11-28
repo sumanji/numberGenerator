@@ -78,7 +78,8 @@ public class LogoControllers {
 		} catch (Exception e) {
 			throw new ApplicationException(e.getMessage(), HttpStatus.UNAUTHORIZED.value());
 		}
-		res.setResponseStatus(HttpStatus.ACCEPTED);
+		res.setResponseStatus(HttpStatus.OK);
+		res.setStatusCode(HttpStatus.OK.value());
 		res.setMessage("Successfully saved details");
 		return res;
 	}

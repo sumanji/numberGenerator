@@ -35,7 +35,8 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 		try {
 			authenticatedUser = businessHelper.getUser(name, password);
 		} catch (Exception e) {
-			throw new ApplicationException(e.getMessage(),HttpStatus.UNAUTHORIZED.value());
+			throw new BadCredentialsException("User Name or Password is Invalid");
+			//throw new ApplicationException(e.getMessage(),HttpStatus.UNAUTHORIZED.value());
 		}
 
 		if (authenticatedUser == null) {
