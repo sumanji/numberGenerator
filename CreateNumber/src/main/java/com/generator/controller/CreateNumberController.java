@@ -44,6 +44,8 @@ public class CreateNumberController {
 		// String token = "";
 		BaseBean res = new BaseBean();
 		res.setResponseStatus(HttpStatus.OK);
+		res.setStatusCode(HttpStatus.OK.value());
+		res.setMessage("Number saved successfully");
 
 		try {
 			boolean cookieAccessTokenEmpty = validaterequest(request, identifierId);

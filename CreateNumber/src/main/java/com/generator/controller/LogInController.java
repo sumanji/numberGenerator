@@ -46,6 +46,8 @@ public class LogInController {
 		String authorization = request.getHeader("Authorization");
 		ResponseBean res = new ResponseBean();
 		res.setResponseStatus(HttpStatus.OK);
+		res.setStatusCode(HttpStatus.OK.value());
+		res.setMessage("Logged in successfully");
 		try {
 			if (StringUtils.isEmpty(authorization) || !authorization.startsWith("Basic")) {
 				throw new ApplicationException("Unauthorized Access", HttpStatus.UNAUTHORIZED.value());
