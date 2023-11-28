@@ -69,7 +69,7 @@ public class LogInController {
 				UserInfo user = businessHelper.getUser(values[0], values[1]);
 				user.setPassword(null);
 				user.setSecurityAnswer(null);
-				res.setUserInfo(user);
+				res.setData(user);
 			}
 			response.addCookie(cookie);
 			res.setUniqueIdentifier(sessionDeatils);

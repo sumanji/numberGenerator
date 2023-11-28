@@ -41,7 +41,6 @@ public class CreateNumberController {
 	@PostMapping("/{identifierId}/create")
 	public BaseBean createNumber(@RequestBody Integer number, @PathVariable("identifierId") String identifierId,
 			HttpServletRequest request) throws Exception {
-		// String token = "";
 		BaseBean res = new BaseBean();
 		res.setResponseStatus(HttpStatus.OK);
 		res.setStatusCode(HttpStatus.OK.value());

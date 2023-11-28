@@ -40,7 +40,7 @@ public class LogoControllers {
 	Set<String> sessionDetailsStorage = new HashSet<String>();
 
 	@GetMapping("/logo/{identifierId}/{logoId}")
-	public Object logoDetails(@PathVariable("logoId") Integer logoId, @PathVariable("identifierId") String identifierId,
+	public BaseBean logoDetails(@PathVariable("logoId") Integer logoId, @PathVariable("identifierId") String identifierId,
 			HttpServletRequest request) throws Exception {
 		try {
 			boolean cookieAccessTokenEmpty = validaterequest(request, identifierId);
@@ -55,7 +55,12 @@ public class LogoControllers {
 		} catch (Exception e) {
 			throw new ApplicationException(e.getMessage(), HttpStatus.UNAUTHORIZED.value());
 		}
-		return businessHelper.getLogoDetails(logoId);
+		ResponseBean res = new ResponseBean();
+		res.setResponseStatus(HttpStatus.OK);
+		res.setStatusCode(HttpStatus.OK.value());
+		res.setMessage("Number saved successfully");
+		res.setData(businessHelper.getLogoDetails(logoId));
+		return res;
 
 	}
 

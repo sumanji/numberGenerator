@@ -38,8 +38,13 @@ public class UserController {
 	
 	
 	@GetMapping("/user/{userId}")
-	public UserInfo userDetails(@PathVariable("userId") Integer userId) throws Exception {
-		return businessHelper.getUserById(userId);		
+	public BaseBean userDetails(@PathVariable("userId") Integer userId) throws Exception {
+	   
+	    ResponseBean res = new ResponseBean();
+		res.setResponseStatus(HttpStatus.OK);
+		res.setData( businessHelper.getUserById(userId));
+		res.setMessage("User fetched  SuccessFully");
+        return res;
 	}
 	
 	@GetMapping("/allUsers")
