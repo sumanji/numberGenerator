@@ -59,7 +59,7 @@ public class LogoControllers {
 		res.setResponseStatus(HttpStatus.OK);
 		res.setStatusCode(HttpStatus.OK.value());
 		res.setMessage("Number saved successfully");
-		res.setData(businessHelper.getLogoDetails(logoId));
+		res.setResponseData(businessHelper.getLogoDetails(logoId));
 		return res;
 
 	}

@@ -42,7 +42,7 @@ public class UserController {
 	   
 	    ResponseBean res = new ResponseBean();
 		res.setResponseStatus(HttpStatus.OK);
-		res.setData( businessHelper.getUserById(userId));
+		res.setResponseData( businessHelper.getUserById(userId));
 		res.setMessage("User fetched  SuccessFully");
         return res;
 	}

@@ -13,11 +13,11 @@ public class ResponseBean extends BaseBean {
 		this.uniqueIdentifier = uniqueIdentifier;
 	}
 
-	public Object getData() {
+	public Object getResponseData() {
 		return responseData;
 	}
 
-	public void setData(Object data) {
+	public void setResponseData(Object data) {
 		this.responseData = data;
 	}
 
