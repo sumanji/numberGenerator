@@ -17,4 +17,9 @@ public class RandomNumberService implements IRandomNumber {
 		return numberDao.save(numberDetail);
 	}
 
+	@Override
+	public boolean isCreateNumberAllowed() {
+		return numberDao.isNumberCreationAllowed()==0?true:false;
+	}
+
 }

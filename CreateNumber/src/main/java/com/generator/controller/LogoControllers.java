@@ -23,6 +23,7 @@ import com.generator.exception.ApplicationException;
 import com.generator.pojo.BaseBean;
 import com.generator.pojo.ResponseBean;
 import com.generator.utilities.JwtService;
+import com.generator.utilities.RequestValidator;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.security.SignatureException;
@@ -43,13 +44,13 @@ public class LogoControllers {
 	public BaseBean logoDetails(@PathVariable("logoId") Integer logoId, @PathVariable("identifierId") String identifierId,
 			HttpServletRequest request) throws Exception {
 		try {
-			boolean cookieAccessTokenEmpty = validaterequest(request, identifierId);
+			boolean cookieAccessTokenEmpty = RequestValidator.validaterequest(request, identifierId,businessHelper,jwtservice);
 			if (cookieAccessTokenEmpty) {
 				throw new ApplicationException("Unauthorized Access", HttpStatus.UNAUTHORIZED.value());
 			}
 
 		} catch (SignatureException | ExpiredJwtException | BadCredentialsException | ApplicationException e) {
-			throw new ApplicationException(e.getMessage(),
+			throw new ApplicationException("Please login again. session expired!!!",
 					e instanceof ApplicationException ? ((ApplicationException) e).getStatusCode()
 							: HttpStatus.UNAUTHORIZED.value());
 		} catch (Exception e) {
@@ -58,8 +59,8 @@ public class LogoControllers {
 		ResponseBean res = new ResponseBean();
 		res.setResponseStatus(HttpStatus.OK);
 		res.setStatusCode(HttpStatus.OK.value());
-		res.setMessage("Number saved successfully");
 		res.setResponseData(businessHelper.getLogoDetails(logoId));
+		res.setMessage("Application settings  fetched successfully");
 		return res;
 
 	}
@@ -69,7 +70,7 @@ public class LogoControllers {
 			@RequestBody LogoStorage logoDetails) throws Exception {
 		BaseBean res = new BaseBean();
 		try {
-			boolean cookieAccessTokenEmpty = validaterequest(request, identifierId);
+			boolean cookieAccessTokenEmpty = RequestValidator.validaterequest(request, identifierId,businessHelper,jwtservice);
 			if (cookieAccessTokenEmpty) {
 				throw new ApplicationException("Unauthorized Access", HttpStatus.UNAUTHORIZED.value());
 			}
@@ -77,7 +78,7 @@ public class LogoControllers {
 			businessHelper.saveApplicationLogo(logoDetails);
 
 		} catch (SignatureException | ExpiredJwtException | BadCredentialsException | ApplicationException e) {
-			throw new ApplicationException(e.getMessage(),
+			throw new ApplicationException("Please login again. session expired!!!",
 					e instanceof ApplicationException ? ((ApplicationException) e).getStatusCode()
 							: HttpStatus.UNAUTHORIZED.value());
 		} catch (Exception e) {
@@ -85,29 +86,8 @@ public class LogoControllers {
 		}
 		res.setResponseStatus(HttpStatus.OK);
 		res.setStatusCode(HttpStatus.OK.value());
-		res.setMessage("Successfully saved details");
+		res.setMessage("Application settings  saved successfully");
 		return res;
 	}
 
-	private boolean validaterequest(HttpServletRequest request, String identifierId) throws Exception {
-		Cookie[] cookies = request.getCookies();
-		boolean cookieAccessTokenEmpty = true;
-		String token = "";
-		if (cookies != null && cookies.length > 0) {
-			for (Cookie cookie : cookies) {
-				if (cookie.getName().equals("access_token")) {
-					token = cookie.getValue();
-					cookieAccessTokenEmpty = token == null;
-				}
-			}
-
-		}
-
-		if (StringUtils.isEmpty(token) || !businessHelper.isSessionActive(identifierId)
-				|| jwtservice.isTokenExpired(token) || !jwtservice.validateToken(token)) {
-			cookieAccessTokenEmpty = true;
-		}
-
-		return cookieAccessTokenEmpty;
-	}
 }

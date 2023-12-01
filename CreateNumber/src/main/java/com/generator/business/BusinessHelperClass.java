@@ -38,14 +38,20 @@ public class BusinessHelperClass implements IBusinessHelper {
 	public boolean createNumber(Integer number) throws ApplicationException {
 		RandomNumberDetail response = null;
 		if (number != null) {
-			try {
-				Date currentDate = new Date(System.currentTimeMillis());
-				RandomNumberDetail numberEntity = new RandomNumberDetail();
-				numberEntity.setNumberInsertionDate(currentDate);
-				numberEntity.setRandomNumber(number);
-				response = numberService.createNumber(numberEntity);
-			} catch (Exception e) {
-				throw new ApplicationException("Error while saving  number.", HttpStatus.BAD_REQUEST.value());
+
+			if (numberService.isCreateNumberAllowed()) {
+				try {
+					Date currentDate = new Date(System.currentTimeMillis());
+					RandomNumberDetail numberEntity = new RandomNumberDetail();
+					numberEntity.setNumberInsertionDate(currentDate);
+					numberEntity.setRandomNumber(number);
+					response = numberService.createNumber(numberEntity);
+				} catch (Exception e) {
+					throw new ApplicationException("Error while saving  number.", HttpStatus.BAD_REQUEST.value());
+				}
+			} else {
+				return false;
+				//throw new ApplicationException("You have already created number today.Please try again tomorrow!!!", HttpStatus.BAD_REQUEST.value());
 			}
 
 		}
@@ -84,7 +90,7 @@ public class BusinessHelperClass implements IBusinessHelper {
 		try {
 			sessionService.deleteSession(userName);
 		} catch (Exception e) {
-			throw new ApplicationException("Error while deleting sdession.", HttpStatus.METHOD_FAILURE.value());
+			throw new ApplicationException("Error while deleting session.", HttpStatus.METHOD_FAILURE.value());
 		}
 	}
 
@@ -110,7 +116,7 @@ public class BusinessHelperClass implements IBusinessHelper {
 				logoService.saveLogoInfo(entity);
 			}
 		} catch (Exception e) {
-			throw new ApplicationException("Eroor while saving logo.", HttpStatus.BAD_REQUEST.value());
+			throw new ApplicationException("Error while saving logo.", HttpStatus.BAD_REQUEST.value());
 		}
 
 	}

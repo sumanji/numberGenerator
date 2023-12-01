@@ -5,5 +5,7 @@ import com.generator.entity.RandomNumberDetail;
 public interface IRandomNumber {
 	
 	public RandomNumberDetail createNumber(RandomNumberDetail numberDetail);
+	
+	public boolean isCreateNumberAllowed();
 
 }

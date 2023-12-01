@@ -22,6 +22,7 @@ import com.generator.exception.ApplicationException;
 import com.generator.pojo.BaseBean;
 import com.generator.pojo.ResponseBean;
 import com.generator.utilities.JwtService;
+import com.generator.utilities.RequestValidator;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.security.SignatureException;
@@ -47,11 +48,14 @@ public class CreateNumberController {
 		res.setMessage("Number saved successfully");
 
 		try {
-			boolean cookieAccessTokenEmpty = validaterequest(request, identifierId);
+			boolean cookieAccessTokenEmpty = RequestValidator.validaterequest(request, identifierId,businessHelper,jwtservice);
 			if (cookieAccessTokenEmpty) {
 				throw new ApplicationException("Unauthorized Access", HttpStatus.UNAUTHORIZED.value());
 			}
-			businessHelper.createNumber(number);
+			boolean result = businessHelper.createNumber(number);
+			if(!result) {
+				res.setMessage("You have already created number today.Please try again tomorrow!!!");
+			}
 
 		} catch (SignatureException | ExpiredJwtException | BadCredentialsException | ApplicationException e) {
 			String loggedInuser = request.getRemoteUser();
@@ -64,27 +68,5 @@ public class CreateNumberController {
 		}
 		return res;
 
-	}
-
-	public boolean validaterequest(HttpServletRequest request, String identifierId) throws Exception {
-		Cookie[] cookies = request.getCookies();
-		boolean cookieAccessTokenEmpty = true;
-		String token = "";
-		if (cookies != null && cookies.length > 0) {
-			for (Cookie cookie : cookies) {
-				if (cookie.getName().equals("access_token")) {
-					token = cookie.getValue();
-					cookieAccessTokenEmpty = token == null;
-				}
-			}
-
-		}
-
-		if (StringUtils.isEmpty(token) || !businessHelper.isSessionActive(identifierId)
-				|| jwtservice.isTokenExpired(token) || !jwtservice.validateToken(token)) {
-			cookieAccessTokenEmpty = true;
-		}
-
-		return cookieAccessTokenEmpty;
 	}
 }
