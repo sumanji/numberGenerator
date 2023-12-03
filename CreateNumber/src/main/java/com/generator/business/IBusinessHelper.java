@@ -3,8 +3,10 @@ package com.generator.business;
 import java.util.List;
 
 import com.generator.entity.LogoStorage;
+import com.generator.entity.RandomNumberDetail;
 import com.generator.entity.UserInfo;
 import com.generator.exception.ApplicationException;
+import com.generator.pojo.ResponseBean;
 
 public interface IBusinessHelper {
 	
@@ -29,6 +31,10 @@ public interface IBusinessHelper {
 	void createuser(UserInfo user) throws ApplicationException;
 	
 	UserInfo getUser(String userName,String password) throws ApplicationException;
+
+	ResponseBean findAllNumber(Integer pageNum, Integer pageSize);
+
+	RandomNumberDetail findNumber(String date);
 
     
 }

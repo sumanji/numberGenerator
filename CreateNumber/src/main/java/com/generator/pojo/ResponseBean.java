@@ -4,6 +4,7 @@ public class ResponseBean extends BaseBean {
 
 	String uniqueIdentifier;
 	Object responseData;
+	Integer totalCount;
 
 	public String getUniqueIdentifier() {
 		return uniqueIdentifier;
@@ -21,4 +22,13 @@ public class ResponseBean extends BaseBean {
 		this.responseData = data;
 	}
 
+	public Integer  getTotalCount() {
+		return totalCount;
+	}
+
+	public void setTotalCount(Integer totalCount) {
+		this.totalCount = totalCount;
+	}
+
+	
 }

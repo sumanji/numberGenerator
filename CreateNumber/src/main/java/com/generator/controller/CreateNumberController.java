@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -31,6 +32,12 @@ import io.jsonwebtoken.security.SignatureException;
 @RequestMapping("/api/v1/generator")
 public class CreateNumberController {
 
+    @Value("${number.maxvalue}")
+	private Integer maximumAllowedNumber ;
+    
+    @Value("${number.minvalue}")
+	private Integer minimumAllowedNumber ;
+	
 	@Autowired
 	private IBusinessHelper businessHelper;
 
@@ -52,10 +59,17 @@ public class CreateNumberController {
 			if (cookieAccessTokenEmpty) {
 				throw new ApplicationException("Unauthorized Access", HttpStatus.UNAUTHORIZED.value());
 			}
-			boolean result = businessHelper.createNumber(number);
-			if(!result) {
-				res.setMessage("You have already created number today.Please try again tomorrow!!!");
+			boolean isNumberPermissible = number>minimumAllowedNumber && number<maximumAllowedNumber;
+			
+			if(isNumberPermissible) {
+				boolean result = businessHelper.createNumber(number);
+				if(!result) {
+					res.setMessage("You have already created number today.Please try again tomorrow!!!");
+				}
+			}else {
+				res.setMessage("Please enter number between "+minimumAllowedNumber +" to "+maximumAllowedNumber);
 			}
+			
 
 		} catch (SignatureException | ExpiredJwtException | BadCredentialsException | ApplicationException e) {
 			String loggedInuser = request.getRemoteUser();

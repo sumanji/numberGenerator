@@ -10,7 +10,6 @@ import com.example.demo.entity.RandomNumberDetail;
 
 public interface INumberDao extends JpaRepository<RandomNumberDetail, Integer> {
 
-	// @Query("SELECT rand FROM RandomNumberDetail rand WHERE rand.numberInsertionDate = :date")
 	@Query(value = "SELECT * FROM random_number_store WHERE number_insertion_date Like %?1%", nativeQuery = true)
 	 RandomNumberDetail findNumberByDate(@Param("date")String date);
 

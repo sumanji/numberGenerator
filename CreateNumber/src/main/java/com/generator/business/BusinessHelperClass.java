@@ -13,6 +13,7 @@ import com.generator.entity.RandomNumberDetail;
 import com.generator.entity.SessionManagement;
 import com.generator.entity.UserInfo;
 import com.generator.exception.ApplicationException;
+import com.generator.pojo.ResponseBean;
 import com.generator.service.ILogo;
 import com.generator.service.IRandomNumber;
 import com.generator.service.ISessionManager;
@@ -161,6 +162,18 @@ public class BusinessHelperClass implements IBusinessHelper {
 		} catch (Exception e) {
 			throw new ApplicationException("Error while fetching user.", HttpStatus.METHOD_FAILURE.value());
 		}
+	}
+
+	@Override
+	public ResponseBean findAllNumber(Integer pageNumber,Integer pageSize) {
+		// TODO Auto-generated method stub
+		return numberService.getAllNumberDetails(pageNumber, pageSize);
+	}
+
+	@Override
+	public RandomNumberDetail findNumber(String date) {   
+		RandomNumberDetail  numberEntity = numberService.getNumberDetails(date);
+		return numberEntity;
 	}
 
 }
